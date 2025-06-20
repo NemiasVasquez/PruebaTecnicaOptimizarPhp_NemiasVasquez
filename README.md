@@ -39,6 +39,6 @@ php artisan l5-swagger:generate
 
 <h3>Notas de terminado</h3>
 <p>Dificultades para interpretar las consutlas sql a eloquent.</p>
-<p>No entrega completa la información.</p>
-<p>Se integra la documentación generada.</p>
+<p>La api no entrega completa la información.</p>
+<p>Se integra Swagger para documentación.</p>
 <p>No se completó de escribir las migraciones, solo las recomendaciones con tipos de datos</p>
