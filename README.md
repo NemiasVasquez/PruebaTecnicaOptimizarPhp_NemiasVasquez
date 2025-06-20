@@ -1,4 +1,4 @@
-<h1>Desarrollador: Nemias David Vasquez Suarez</h1>
+<h1>Desarrollador: Nemias David Vasquez Suarez - Laravel 11</h1>
 
 <h2>Actualizaciones de la base de datos.</h2>
 
@@ -20,10 +20,25 @@
 <h2>Pasos para levantar el proyecto</h2>
 En la terminal del proyecto
 
+<p>Se deben ejecutar estos comandos antes de levantar el api</p>
+
+php artisan config:clear     
+php artisan cache:clear 
+php artisan route:clear 
+php artisan view:clear 
+php artisan config:cache 
+php artisan route:cache
+php artisan l5-swagger:generate
+
 <ul>
     <li>Ejecutar "composer install"</li>
     <li>Ejecutar "composer dump-autoload -o"</li>
     <li>Configurar el archivo .env con la base de datos entregada.</li>
     <li>Ejecutar "php artisan serve"</li>
-    
 </ul>
+
+<h3>Notas de terminado</h3>
+<p>Dificultades para interpretar las consutlas sql a eloquent.</p>
+<p>No entrega completa la información.</p>
+<p>Se integra la documentación generada.</p>
+<p>No se completó de escribir las migraciones, solo las recomendaciones con tipos de datos</p>

@@ -46,6 +46,18 @@ class datos_controller extends Controller
         return $data;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/traerDatos",
+     *     summary="Se obtienen los datos registrados en base.",
+     *     description="Prueba principal de la entrevista técnica.",
+     *     tags={"datos"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Entrega de los datos",
+     *     ),
+     * )
+     */
     public function traerDatos()
     {
         //$terminales = $this->db->select("SELECT ter_id, ter_nombre, ter_ubigeo FROM emp_terminal where ter_nombre!='...'");
@@ -60,15 +72,10 @@ class datos_controller extends Controller
         $count_terminales = count($terminales);
         */
 
-        $distritos = emp_ciudad_ubigeo::where('ubi_distrito', '!=', '')->WhereExists(
-                                                        function ($query) use () {
-                                                            $query->select(DB::raw(1))
-                                                                ->from('emp_tarifario_grupos')
-                                                                ->whereRaw('muestreo_general.aprobacion_banco_id = aprobacion_banco.id')
-                                                                ->where('aprobacion_banco.banco_sangre_id', '=', $input['banco_sangre_id'] );
-
-                                                        })
+        $distritos = emp_ciudad_ubigeo::where('ubi_distrito', '!=', '')
             ->select('ubi_departamento', 'ubi_provincia', 'ubi_distrito', 'ubi_id')->distinct()->get();
+
+        $count_terminales = count($terminales);
 
         for ($i = 0; $i < $count_terminales; $i++) {
             $datos[$terminales[$i]->ter_id] = [
@@ -82,22 +89,37 @@ class datos_controller extends Controller
 
     public function traerDist($id)
     {
-        $ubigeo = $this->db->select("SELECT ter_ubigeo FROM emp_terminal where ter_id = $id")[0]->ter_ubigeo;
-        $dep_id = $this->db->select("SELECT ubi_depid FROM emp_ciudad_ubigeo WHERE ubi_id = $ubigeo")[0]->ubi_depid;
-        $prov_id = $this->db->select("SELECT ubi_provid FROM emp_ciudad_ubigeo WHERE ubi_id = $ubigeo")[0]->ubi_provid;
+        #$ubigeo = $this->db->select("SELECT ter_ubigeo FROM emp_terminal where ter_id = $id")[0]->ter_ubigeo;
+        $ubigeo = emp_terminal::where('ter_id', '==', $id)->select('ter_ubigeo')->get();
 
-        $distritos = $this->db->select("
-                SELECT DISTINCT ubi_distrito, ubi_id
-                FROM emp_ciudad_ubigeo
-                WHERE (
-                    ubi_depid = $dep_id
-                    AND ubi_provid = $prov_id AND ubi_distrito != ''
-                    AND ubi_distid IN (
-                            SELECT DISTINCT ta_id_distrito
-                            FROM `emp_tarifario_grupos`
-                            WHERE ta_id_departamento = $dep_id  AND ta_id_provincia = $prov_id
-                    )
-                )");
+        #$dep_id = $this->db->select("SELECT ubi_depid FROM emp_ciudad_ubigeo WHERE ubi_id = $ubigeo")[0]->ubi_depid;
+
+        $dep_id = emp_ciudad_ubigeo::where('ubi_id', '==', $ubigeo)->select('ubi_depid')->get();
+
+        #$prov_id = $this->db->select("SELECT ubi_provid FROM emp_ciudad_ubigeo WHERE ubi_id = $ubigeo")[0]->ubi_provid;
+
+        $prov_id = emp_ciudad_ubigeo::where('ubi_id', '==', $ubigeo)->select('ubi_provid')->get();
+
+        /*
+            $distritos = $this->db->select("
+                    SELECT DISTINCT ubi_distrito, ubi_id
+                    FROM emp_ciudad_ubigeo
+                    WHERE (
+                        ubi_depid = $dep_id
+                        AND ubi_provid = $prov_id AND ubi_distrito != ''
+                        AND ubi_distid IN (
+                                SELECT DISTINCT ta_id_distrito
+                                FROM `emp_tarifario_grupos`
+                                WHERE ta_id_departamento = $dep_id  AND ta_id_provincia = $prov_id
+                        )
+                    )");
+
+        */
+        $distritos = emp_ciudad_ubigeo::where('ubi_depid', '==', $dep_id)
+            ->where('ubi_provid', '==', $prov_id)
+            ->where('ubi_distrito', '!=', '')
+            ->select('ubi_distrito', 'ubi_id')->distinct()->get();
+
         $count_distritos = count($distritos);
         for ($i = 0; $i < $count_distritos; $i++) {
             $data[] = [
@@ -107,7 +129,7 @@ class datos_controller extends Controller
                 "tarifa_reparto" => $this->traerTarifa($distritos[$i]->ubi_id, 'reparto')
             ];
         }
-        return $data;
+        return $data??[];
     }
 
     public function traerTarifa($ubi_id, $tipo)

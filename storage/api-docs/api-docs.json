@@ -23,6 +23,21 @@
                     }
                 }
             }
+        },
+        "/traerDatos": {
+            "get": {
+                "tags": [
+                    "datos"
+                ],
+                "summary": "Se obtienen los datos registrados en base.",
+                "description": "Prueba principal de la entrevista técnica.",
+                "operationId": "a613b62f8386523068f0666a18f99dc0",
+                "responses": {
+                    "200": {
+                        "description": "Entrega de los datos"
+                    }
+                }
+            }
         }
     },
     "tags": [
