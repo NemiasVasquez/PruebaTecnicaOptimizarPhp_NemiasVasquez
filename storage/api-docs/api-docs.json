@@ -1,0 +1,41 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Prueba técnica Nemias Vasquez",
+        "description": "Se realiza la prueba técnica para optimizar el lenguaje php con laravel 11",
+        "contact": {
+            "email": "nemiasvasquezs@hotmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/prueba": {
+            "get": {
+                "tags": [
+                    "datos"
+                ],
+                "summary": "Prueba de funcionamiento del API",
+                "description": "Vaidar que el api envíe información",
+                "operationId": "f72deab92876f110f99636b05979d07b",
+                "responses": {
+                    "200": {
+                        "description": "[]"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "datos",
+            "description": "datos"
+        }
+    ],
+    "security": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization"
+        }
+    }
+}

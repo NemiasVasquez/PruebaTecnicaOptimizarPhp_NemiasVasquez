@@ -21,15 +21,6 @@ return Application::configure(basePath: dirname(__DIR__))
             $url.'/*',//Aquí actualizaz la url automáticamente.
         ]);
 
-        $middleware->alias([
-            'auth.jwt' => \App\Http\Middleware\JWTMiddleware::class,
-            'jwtErrors' => JwtMiddleware2::class,
-            'errors' => HandleErrors::class,
-        ]);
-
-        //$middleware->append(HandleErrors::class);
-        //$middleware->append(JwtMiddleware2::class);
-        $middleware->append(TransactionMiddleware::class); // envonver todas las peticiones con un transaction.
 
     })
 
